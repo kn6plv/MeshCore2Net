@@ -3,17 +3,20 @@
 const { Buffer } = require('node:buffer');
 const Dgram = require('node:dgram');
 const { SerialPort } = require("serialport");
+const os = require("os");
 
-const MESHCORE_SERIAL = "/dev/ttyS0";
-const INTERFACE_ADDRESS = "10.209.100.78";
+const INTERFACE = "eth0";
+const SERIAL = "/dev/ttyS0";
 
 const MESHCORE_BAUDRATE = 115200;
 
 const MULTICAST_ADDRESS = "224.0.0.69";
 const MULTICAST_PORT = 4402;
 
+const INTERFACE_ADDRESS = os.networkInterfaces()[INTERFACE].find(net => net.family === "IPv4").address;
+
 const port = new SerialPort({
-  path: MESHCORE_SERIAL,
+  path: SERIAL,
   baudRate: MESHCORE_BAUDRATE
 });
 
@@ -54,6 +57,5 @@ port.on("data", buf => {
     }
 });
 udp.on("message", (message, rinfo) => {
-//console.log(message, rinfo);
     port.write(message);
 });
