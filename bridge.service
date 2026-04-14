@@ -1,0 +1,14 @@
+[Unit]
+Description=MeshCore2Net
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+StandardOutput=journal
+ExecStart=/root/bridge.js
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
