@@ -1,9 +1,9 @@
 #! /root/.nvm/versions/node/v25.6.1/bin/node
 
-const { Buffer } = require('node:buffer');
-const Dgram = require('node:dgram');
+const { Buffer } = require("node:buffer");
+const { createSocket } = require("node:dgram");
 const { SerialPort } = require("serialport");
-const os = require("os");
+const { networkInterfaces } = require("node:os");
 
 const INTERFACE = "eth0";
 const SERIAL = "/dev/ttyS0";
@@ -13,14 +13,14 @@ const MESHCORE_BAUDRATE = 115200;
 const MULTICAST_ADDRESS = "224.0.0.69";
 const MULTICAST_PORT = 4402;
 
-const INTERFACE_ADDRESS = os.networkInterfaces()[INTERFACE].find(net => net.family === "IPv4").address;
+const INTERFACE_ADDRESS = networkInterfaces()[INTERFACE].find(net => net.family === "IPv4").address;
 
 const port = new SerialPort({
   path: SERIAL,
   baudRate: MESHCORE_BAUDRATE
 });
 
-const udp = Dgram.createSocket({ type: "udp4", reuseAddr: true });
+const udp = createSocket({ type: "udp4", reuseAddr: true });
 udp.bind(MULTICAST_PORT, _ => {
     udp.addMembership(MULTICAST_ADDRESS, INTERFACE_ADDRESS);
     udp.setMulticastInterface(INTERFACE_ADDRESS);
@@ -35,7 +35,6 @@ port.on("data", buf => {
             const len = incoming.readUInt16BE(2);
             if (len < 256) {
                 if (incoming.length >= len + 6) {
-                    console.log(incoming.subarray(0, len + 6));
                     udp.send(incoming, 0, len + 6, MULTICAST_PORT, MULTICAST_ADDRESS, err => {
                         if (err) {
                             console.log(err);
