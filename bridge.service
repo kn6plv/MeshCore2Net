@@ -6,7 +6,8 @@ After=network-online.target
 [Service]
 Type=simple
 StandardOutput=journal
-ExecStart=/root/bridge.js
+Environment=NODE_VERSION=node
+ExecStart=/root/.nvm/nvm-exec /root/bridge.js
 Restart=always
 RestartSec=3
 

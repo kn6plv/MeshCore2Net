@@ -1,4 +1,4 @@
-#! /root/.nvm/versions/node/v25.6.1/bin/node
+#! /usr/bin/env node
 
 const { Buffer } = require("node:buffer");
 const { createSocket } = require("node:dgram");
