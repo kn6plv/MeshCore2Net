@@ -7,7 +7,7 @@ After=network-online.target
 Type=simple
 StandardOutput=journal
 Environment=NODE_VERSION=node
-ExecStart=/root/.nvm/nvm-exec /root/bridge.js
+ExecStart=/root/.nvm/nvm-exec /root/MeshCore2Net/bridge.js
 Restart=always
 RestartSec=3
 
